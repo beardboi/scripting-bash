@@ -1,38 +1,67 @@
 #!/bin/bash
 
-# Option 2)
-initApache() {
+# Opcion 1.
+run_netcat() {
+	clear
+	echo ""
+	echo "Corriendo netcat..."
+	echo ""
+	for i in $(seq 1 65535); do nc -nvz -w 1 127.0.0.1 $i 2>&1; done | grep -v "refused"
+	show_menu	
+}
+
+# Option 2.
+init_apache() {
 	clear
 	status=$(service apache2 status)
 	if [[ $status == *"active (running)"* ]]; then
 		echo "####################################"
-		echo "El servidor Apache ya esta corriendo"
+		echo "#  El servicio ya esta corriendo   #"
 		echo "####################################"
 	else 
 		echo "####################################"
 		echo "#    Iniciando servidor Apache...  #"
 		echo "####################################"
-		service apache2 start
+		echo ""
+		sudo service apache2 start
 	fi
 	echo ""
-	showMenu
+	show_menu
 }
 
-showActiveConnections() {
+# Opcion 3.
+run_fierce() {
+	clear
+	echo "#################################################"
+	echo "# [3] Enumeracion de dominios utilizando Fierce #" 
+	echo "############### Ingrese el dominio:##############"
+	read DOMAIN
+	echo ""
+	fierce --domain $DOMAIN
+	echo "..."
+}
+
+# Opcion 4.
+show_active_con() {
 	clear
 	echo "Listando conexiones activas..."
-	netstat -putona
-	showMenu
+	echo ""
+	sudo netstat -notapu
+	echo ""
+	show_menu
 }
 
-closeProgram() {
+
+# Opcion 5.
+close_program() {
 	echo "#########################"
 	echo "# Cerrando programa...  #"
 	echo "#########################"
 	exit 1
 }
 
-showMenu() {
+# Menu principal
+show_menu() {
 	echo "####################################"
 	echo "# Autor: Diego Bravo"
 	echo "# Fecha: 12/07/2021"
@@ -45,23 +74,24 @@ showMenu() {
 	echo "[3] Enumeracion de dominios"
 	echo "[4] Conexiones activas"
 	echo "[5] Salir"
-	read CHOISE
+	echo ""
+	read OPTION
 
-	case $CHOISE in
+	case $OPTION in
 		1)
-			echo "[1] Mapeo de red con Netcat";;
+			run_netcat;;
 		2)
-			initApache;;
+			init_apache;;
 		3) 
-			echo "[3] Enumeracion de dominios";;
+			run_fierce;;
 		4)
-			showActiveConnections;;
+			show_active_con;;
 		5)
-			closeProgram;;
+			close_program;;
 		*)
 			echo "Ingrese una opcion valida";;
 	esac
 }
 
 # Entry point
-showMenu
+show_menu
