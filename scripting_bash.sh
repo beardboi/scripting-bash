@@ -6,7 +6,9 @@ run_netcat() {
 	echo ""
 	echo "Corriendo netcat..."
 	echo ""
-	for i in $(seq 1 65535); do nc -nvz -w 1 127.0.0.1 $i 2>&1; done | grep -v "refused"
+	for i in $(seq 1 9000); 
+		do nc -nvz -w 1 127.0.0.1 $i 2>&1; 
+	done | grep -v "refused"
 	show_menu	
 }
 
